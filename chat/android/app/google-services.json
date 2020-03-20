@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "995146914474",
+    "firebase_url": "https://chatflutter-9e994.firebaseio.com",
+    "project_id": "chatflutter-9e994",
+    "storage_bucket": "chatflutter-9e994.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995146914474:android:2485850f841b9e78974ed3",
+        "android_client_info": {
+          "package_name": "correa.com.br"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "995146914474-sjl3rop35ud03e4pbvs271d6m00ej8h0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "correa.com.br",
+            "certificate_hash": "3753ff598c01807af8ba588212b5915374230601"
+          }
+        },
+        {
+          "client_id": "995146914474-ncq2ruthf3gv78aqrcp8bmg5p3tat1bt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDntzf3KEs5MnXPdh79M1SgDrp5SXw5cm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "995146914474-ncq2ruthf3gv78aqrcp8bmg5p3tat1bt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
