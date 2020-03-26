@@ -1,11 +1,13 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class TextComposer extends StatefulWidget {
 
   TextComposer(this.sendMessage);//instancia a função
 
-  Function(String) sendMessage; //cria a função
+  final Function({String text, File imgFile}) sendMessage; //cria a função
 
   @override
   _TextComposerState createState() => _TextComposerState();
@@ -32,8 +34,10 @@ class _TextComposerState extends State<TextComposer> {
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.photo_camera),
-            onPressed: (){
-
+            onPressed: () async {
+              final File imgFile = await ImagePicker.pickImage(source: ImageSource.camera);//carrega a foto da camera e guarda da variável, await para esperar a foto
+              if (imgFile == null) return; //sai da função caso usuário não tire a foto
+              widget.sendMessage(imgFile: imgFile);
             },
           ),
         Expanded(
@@ -46,7 +50,7 @@ class _TextComposerState extends State<TextComposer> {
               });
             },
             onSubmitted: (text){
-              widget.sendMessage(text);//envia a mensagem digitada
+              widget.sendMessage(text: text);//envia a mensagem digitada
               _reset();
             },
           ),
@@ -54,7 +58,7 @@ class _TextComposerState extends State<TextComposer> {
         IconButton(
           icon: Icon(Icons.send),
           onPressed: _isComposing ? (){
-            widget.sendMessage(_controller.text);//Enviar mensagem pelo botão
+            widget.sendMessage(text : _controller.text);//Enviar mensagem pelo botão
             _reset();
           } : null,//verifica se está digitando para habilitar o botão de enviar
         )
