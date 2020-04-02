@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterchat/TestComposer.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'ChatMessage.dart';
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -19,12 +20,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
   FirebaseUser _currentUser;
 
+  bool _isloading = false;
+
   @override
   void initState() {
     super.initState();
 
     FirebaseAuth.instance.onAuthStateChanged.listen((user){
-      _currentUser = user; //quando ele logar o currentUser vai conter o usuário logado, quando ele deslogar vai conter nulo
+      setState(() {
+        _currentUser = user; //quando ele logar o currentUser vai conter o usuário logado, quando ele deslogar vai conter nulo
+      });
+
     }); //sempre que a autenticação mudar vai chamar essa função anônima com o usuário atual, que pode ser nulo ou o usuário logado
   }
 
@@ -65,25 +71,34 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     Map<String, dynamic> data = {//caso consiga fazer o login vai obter os dados do usuário
-//coloca os dados do usuário
+    //coloca os dados do usuário
       'uid' : user.uid,
       'sendName' :  user.displayName,
       'sendPhoto' : user.photoUrl,
+      'time' : Timestamp.now(),//pega data atual para ordenar por ela as mensagens
 
     };//cria o mapa data para usar na imagem ou texto
 
-//coloca imagem caso tenha
+   //coloca imagem caso tenha
     if (imgFile != null){//verifica que foi tirado a foto, ou seja, tem imagem
      StorageUploadTask task = FirebaseStorage.instance.ref().child(//armazena no storage do firebase
        DateTime.now().millisecondsSinceEpoch.toString()//a chave no firebase storage vai ser o milisegundos
      ).putFile(imgFile);//envia a mensagem para o firebase storage
+
+     setState(() {
+       _isloading = true; //começou a enviar a mensagem coloca a variável como verdadeira
+     });
 
     StorageTaskSnapshot taskSnapshot = await task.onComplete;//espera a tarefa ser completada e vai trazer várias informações da task que foi concluída
     String url = await taskSnapshot.ref.getDownloadURL();//pega a url da task para depois utilizá-la para exibir
     data['imgUrl'] = url;//guarda a chave da image no Firebase Database
    }
 
-//coloca o texto caso tenha
+    setState(() {
+      _isloading = false; //terminou de enviar a imagem coloca como false
+    });
+
+   //coloca o texto caso tenha
     if (text != null) data['text'] = text; //verifica se tem informação no texto para armazenar no mapa
     Firestore.instance.collection('message').add(data); //envia o texto para o Firebase
   }
@@ -94,14 +109,32 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       key: _scaffoldkey,//necessário para mostrar o erro do snackbar na tela
       appBar: AppBar(
-        title: Text("Olá"),
+        title: Text(
+
+          _currentUser != null ? 'Olá ${_currentUser.displayName}' : 'Chat App'
+        ),
+        centerTitle: true, // centralizar o título
         elevation: 0,
+        actions: <Widget>[
+          _currentUser != null ? IconButton(//se o usuário está logado mostra o ícone de sair
+            icon: Icon(Icons.exit_to_app),
+            onPressed: (){
+              FirebaseAuth.instance.signOut();
+              googleSignIn.signOut();
+              _scaffoldkey.currentState.showSnackBar(
+                  SnackBar(//mostra uma mensagem ao usuário após deslogar.
+                    content: Text('Você foi desconectado'),
+                  )
+              );
+            },
+          ) : Container()// se não tiver usuário logado não mostra ícone
+        ],
       ),
     body: Column(
       children: <Widget>[
         Expanded(
           child: StreamBuilder<QuerySnapshot>(//aponta para a coleção e sempre que algo mudar, refaz a tela
-            stream: Firestore.instance.collection("message").snapshots(), //stream vai retornando sempre que tem uma modificação
+            stream: Firestore.instance.collection("message").orderBy('time').snapshots(), //stream vai retornando sempre que tem uma modificação
             builder: (context, snapshot){//snapshot retorna um query snapshot
               switch(snapshot.connectionState){ //switch para verificar se a conexão com o firebase foi feita
                 case ConnectionState.none://não retornou nada
@@ -117,8 +150,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: documents.length,
                     reverse: true,//mensagens vão aparecer de baixo para cima
                     itemBuilder: (context, index){
-                      return ListTile(
-                        title: Text(documents[index].data['text']),
+                      return ChatMessage(//vai passar os dados do documento, mensagem, a imagem, quem mandou, etc.
+                        documents[index].data, 
+                        documents[index].data['uid'] == _currentUser?.uid, // verificar se o usuário que está enviando as mensagens é o mesmo que está logado para exibir um à direita (meu) e outro a esquerda.
                       );
                     }
                 );
@@ -127,6 +161,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           ),
         ),
+       _isloading ? LinearProgressIndicator() : Container(),// enquanto estiver carregando a imagem, irá mostrar uma barra de carregando..
        TextComposer(_sendMessage),
       ],
     ),
