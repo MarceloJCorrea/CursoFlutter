@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class HomeTab extends StatelessWidget {
   @override
@@ -46,16 +48,26 @@ class HomeTab extends StatelessWidget {
                       ),
                     ),
                   );
-                else {
-                  print(snapshot.data.documents.length);
-                  return SliverToBoxAdapter(
-                    child: Container(
-                      height: 200.0,
-                      alignment: Alignment.center,
-                      child: Container()
-                    ),
+                else
+                  return SliverStaggeredGrid.count(//grade com as imagens
+                      crossAxisCount: 2,//todos itens são colocados ao mesmo tempo, quantidade blocos na horizontal
+                      mainAxisSpacing: 1.0 , //espaçamento do eixo princial
+                      crossAxisSpacing: 1.0 ,//espaçamento do eixo horizontal
+                      staggeredTiles: snapshot.data.documents.map(//pega a lista de documentos e mapeia
+                          (doc){//para cada um dos documentos da lista chama essa função
+                            return StaggeredTile.count(doc.data['x'], doc.data['y']);//para cada um dos documentos está pegando o x e o y e transformando em um stagred tile
+                          } //função anônima que recebe o documento
+                      ).toList(), //lista das dimensções das imagens, tem que ser no formato stragred tile
+                    children: snapshot.data.documents.map(
+                        (doc){
+                          return FadeInImage.memoryNetwork(//image que aparece suavemente na tela
+                              placeholder: kTransparentImage,
+                              image: doc.data['image'],
+                              fit: BoxFit.cover,
+                          );
+                        }
+                    ).toList(),
                   );
-                }
               },
             )
           ],
