@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lojavirtual/tiles/drawer_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
+
+  final PageController pageController; //declara a variavel do page controle para ter acesso a ele
+
+  CustomDrawer(this.pageController); //intancia o construtor para ter acesso ao pagecontrole
+
   @override
   Widget build(BuildContext context) {
 
@@ -70,11 +75,11 @@ class CustomDrawer extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(),
-              DrawerTile(Icons.home, "Início"),
-              DrawerTile(Icons.list, "Produtos"),
-              DrawerTile(Icons.location_searching, "Lojas"),
-              DrawerTile(Icons.playlist_add_check, "Meu Pedidos"),
+              Divider(),//divide o OLá, entre ou cadastre-se do restante
+              DrawerTile(Icons.home, "Início", pageController, 0),//chama o Drawertile com o icone e nome
+              DrawerTile(Icons.list, "Produtos", pageController, 1),//chama o Drawertile com o icone e nome
+              DrawerTile(Icons.location_searching, "Lojas", pageController, 2),//chama o Drawertile com o icone e nome
+              DrawerTile(Icons.playlist_add_check, "Meu Pedidos", pageController, 3),//chama o Drawertile com o icone e nome
             ],
           )
         ],
