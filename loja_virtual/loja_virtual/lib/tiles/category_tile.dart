@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lojavirtual/screens/category_screen.dart';
 
 class CategoryTile extends StatelessWidget {
 
@@ -17,7 +18,13 @@ class CategoryTile extends StatelessWidget {
       ),
       title: Text(snapshot.data["title"]),//titulo que será carregado do firestore
       trailing: Icon(Icons.keyboard_arrow_right),//seta do final para indicar para entrar para ver os produtos
-      onTap: (){},
+      onTap: (){
+        Navigator.of(context).push(//ao clicar no categoria "camiseta", "shorts" vai para a tela CategoryScreen
+          MaterialPageRoute(
+            builder: (context) => CategoryScreen(snapshot)
+          )
+        );
+      },
     );
   }
 }
