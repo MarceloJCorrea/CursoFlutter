@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:lojavirtual/data/products_data.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -16,6 +17,8 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
 
   final ProductData product;
+
+  String size;
 
   _ProductScreenState(this.product); //declara o construtor para pode usar o product de Product Data dentro da tela de produto sem precisar ficar chamando o widget toda hora
 
@@ -63,6 +66,86 @@ class _ProductScreenState extends State<ProductScreen> {
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,//dá uma destacada no preço
                     color: primarycolor
+                  ),
+                ),
+                SizedBox(//coloca um espaço entre a preço do produto e o label tamanho
+                  height: 16.0,
+                ),
+                Text(
+                  "Tamanho",
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(//coloca um espacinho entre o texto tamanho e os tamanhos a escolher
+                  height: 34.0,
+                  child: GridView(//poderia ser o ListView que é a mesma coisa
+                    scrollDirection: Axis.horizontal, //se não passar esse parâmetro ele vai ficar na vertical por padrão
+                    padding: EdgeInsets.symmetric(vertical: 4.0),//espaçamento emcima e embaixo
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      mainAxisSpacing: 8.0,//espaçamento do eixo princical, espaçamento na horizontal
+                      childAspectRatio: 0.5,//divisão entre a altura pela largura, 0.5 largura duas vezes a altura é 0.5
+                    ),
+                    children: product.sizes.map(//lista de tamanhos e mapeando em uma lista
+                        (s){//strign s
+                          return GestureDetector(//gesture detector para que possamos detectar o cliente para escolher o tamanho
+                            onTap: (){
+                              setState(() {
+                                size = s;
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(4.0)),//colocar uma borda circular nos botões de tamanho
+                                border: Border.all(
+                                  color: s == size ? primarycolor : Colors.grey[500],//se essa for a cor selecionada vai ficar a cor primaria, caso contrário vai fizer um cinza.
+                                  width: 3.0
+                                )
+                              ),
+                              width: 50.0,
+                              alignment: Alignment.center,
+                              child: Text(s),//texto é o tamanho que retornou da lista que foi feito o mapeamento do que retornou do firebase
+                            ),
+                          );
+                        }
+                    ).toList()
+                  ),
+                ),
+                SizedBox(
+                  height: 16.0,//separador somente para não ficar colado no tamanho
+                ),
+                SizedBox(
+                  height: 44.0,
+                  child: RaisedButton(//botão
+                    onPressed:
+                        size != null ?//verifica se foi selecionado tamanho se sim, libera o botão senão, retorna null
+                        (){} : null,
+                    child: Text(//texto do botão
+                      "Adicionar ao carrinho",
+                      style: TextStyle(
+                        fontSize: 18.0
+                      ),
+                    ),
+                    color: primarycolor,//cor do botão
+                    textColor: Colors.white,//cor do texto do botão
+                  )
+                ),
+                SizedBox(//coloca um espaço entre a preço do produto e o label tamanho
+                  height: 16.0,
+                ),
+                Text(
+                  "Tamanho",
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  product.description,
+                  style: TextStyle(
+                    fontSize: 16.0
                   ),
                 )
               ],
