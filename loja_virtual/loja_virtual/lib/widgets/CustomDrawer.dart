@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lojavirtual/models/user_model.dart';
 import 'package:lojavirtual/screens/login_screen.dart';
 import 'package:lojavirtual/tiles/drawer_tile.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class CustomDrawer extends StatelessWidget {
 
@@ -48,34 +50,42 @@ class CustomDrawer extends StatelessWidget {
                     Positioned(
                       bottom: 0.0,
                       left: 0.0,
-                      child: Column(//coluna que vai ter o dois texto dentro, posicionados abaixo e a esquerda (bottom e left)
-                        crossAxisAlignment: CrossAxisAlignment.start,//alinhamento no início
-                        children: <Widget>[
-                          Text(
-                            'Olá',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          GestureDetector(//gesture detector para por usar o botão de cadastrar com o on tap
-                            child:
+                      child: ScopedModelDescendant<UserModel>(
+                        builder: (context, child, model){
+                          return Column(//coluna que vai ter o dois texto dentro, posicionados abaixo e a esquerda (bottom e left)
+                            crossAxisAlignment: CrossAxisAlignment.start,//alinhamento no início
+                            children: <Widget>[
                               Text(
-                                'Entre ou cadastre-se >',
+                                'Olá ${!model.isLoggedIn() ? "" : model.userData['name']}',//se o usuário for nulo, mostra "" senão mostra o nome do usuário logado
                                 style: TextStyle(
-                                    color: Theme.of(context).primaryColor,//chama a cor primária do tema, declarada na home page
-                                    fontSize: 16.0,
+                                    fontSize: 18.0,
                                     fontWeight: FontWeight.bold
                                 ),
                               ),
-                            onTap: (){
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context)=>LoginScreen())
-                              );
-                            },
-                          )
-                        ],
-                      ),
+                              GestureDetector(//gesture detector para por usar o botão de cadastrar com o on tap
+                                child:
+                                Text(
+                                  !model.isLoggedIn() ? //senão não está logado coloca o botão para entrar ou cadastrar, senão coloca Sair
+                                  'Entre ou cadastre-se >' : "Sair",
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,//chama a cor primária do tema, declarada na home page
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                onTap: (){
+                                  if(!model.isLoggedIn())
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context)=>LoginScreen())
+                                  );
+                                  else
+                                    model.signOut();
+                                },
+                              )
+                            ],
+                          );
+                        },
+                      )
                     )
                   ],
                 ),
