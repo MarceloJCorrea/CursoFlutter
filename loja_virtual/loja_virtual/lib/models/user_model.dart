@@ -14,7 +14,14 @@ class UserModel extends Model{
 
  bool isLoading = false;//verificar se está modificando ou não
 
-  //realiza o login do usuario -- @required coloca o parâmetro da função como obrigatorio, o {} coloca como opcional, mas quando coloca o required será obrigatorio o preenchimento
+ @override
+ void addListener(VoidCallback listener) {//quando rodar o app irá pegar o usuário atual através dessa função
+   super.addListener(listener);
+
+   _loadCurrentUser();
+ } 
+ 
+ //realiza o login do usuario -- @required coloca o parâmetro da função como obrigatorio, o {} coloca como opcional, mas quando coloca o required será obrigatorio o preenchimento
   void signUp ({@required Map<String, dynamic> userData, @required String pass, @required VoidCallback onSuccess, @required VoidCallback onFail}){ //recebe a data, senha, se o login foi feito com sucesso ou se teve falha
     isLoading = true; //estamos carregando
     notifyListeners();//notifica o usuário que estamos carregando
@@ -39,16 +46,30 @@ class UserModel extends Model{
     
   }
 
+
   //cadastro do usuário
-  void signIn() async{
+  void signIn({@required String email, @required String pass, @required VoidCallback onSuccess, @required VoidCallback onFail}) async{
     isLoading = true;//indica que estou modificando
     notifyListeners();//notifica o usuário de que foi atualizado os dados no app
 
-    await Future.delayed(Duration(seconds: 3));
+    _auth.signInWithEmailAndPassword(//tentando criar o usuário
+        email: email, //recebe o e-mail do firebase
+        password: pass//recebe a senha do parâmetro da função
+    ).then((user) async {//se for um sucesso vai chamar essa função passando o usuário
+      firebaseUser = user;
 
-    isLoading = false;//indica que já terminei de modificar
-    notifyListeners();//notifica o usuário de que foi atualizado os dados no app
+      await _loadCurrentUser(); //quando fizer o login será carregado o usuário atual.
 
+          onSuccess();
+          isLoading = false;
+          notifyListeners();
+
+        }).catchError((e){//se der erro dá a falha e notifica
+          onFail();//função que indica que falhou
+          isLoading = false;
+          notifyListeners();
+
+    });
   }
 
   //função que verifica se tem usuário logado, então se o usuáiro atual for diferente de null vai retornar true, indicando que tem usuaário logado
@@ -57,9 +78,9 @@ class UserModel extends Model{
   }
 
   //recupera a senha
-  void recoverPass(){
-
-  }
+  void recoverPass(String email) async {
+    _auth.sendPasswordResetEmail(email: email);
+ }
 
   //função que sai do usuário
   void signOut() async{
@@ -74,4 +95,16 @@ class UserModel extends Model{
     this.userData = userData;
     await Firestore.instance.collection('users').document(firebaseUser.uid).setData(userData);//salva os dados no firebase
   }
+
+  Future<Null> _loadCurrentUser() async{//função que carrega os dados do usuário do firebase
+    if(firebaseUser == null)//se não tiver usuário logado, tenta recuperar o usuário
+      firebaseUser = await _auth.currentUser();
+    if(firebaseUser != null){//se tem usuário logado, mostra o usuário
+      if(userData['name'] == null){
+        DocumentSnapshot docUser = await Firestore.instance.collection('users').document(firebaseUser.uid).get();//carega do firestore o usuário
+        userData = docUser.data;//guarda o que retornou no userData
+      }
+    }
+    notifyListeners();
+    }
 }

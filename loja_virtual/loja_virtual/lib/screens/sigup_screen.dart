@@ -40,10 +40,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       decoration: InputDecoration(
                         hintText: "Nome Completo",
                       ),
-                      /*validator: (text) {
+                      validator: (text) {
                         if (text.isEmpty) return "Nome inválido!";
-
-                      },*/
+                      else
+                        return null;
+                      },
                     ),
                     SizedBox(height: 16.0,),
                     //cria um espaço entre o nome e o e-mail
@@ -54,11 +55,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       keyboardType: TextInputType.emailAddress,
                       //chama o teclado para receber dados do tipo e-mail, vai ter o @ para selecionar
-                     /* validator: (text) {
+                      validator: (text) {
                         if (text.isEmpty || !text.contains("@")) return "E-mail inválido!";
                         else
-                          return "";
-                      },*/
+                          return null;
+                      },
                     ),
                     SizedBox(height: 16.0,),
                     //cria um espaço entre o e-mail e a senha
@@ -68,11 +69,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         hintText: "Senha",
                       ),
                       obscureText: true, //não mostra a senha
-                      /*validator: (text) {
+                      validator: (text) {
                         if (text.isEmpty || text.length < 6) return "Senha inválido!";
                         else
-                          return '';
-                      },*/
+                          return null;
+                      },
                     ),
                     SizedBox(height: 16.0,), //cria um espaço entre a senha e o endereço
                     TextFormField( //cria o campo de texto que vai receber e validar o endreço
@@ -80,11 +81,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       decoration: InputDecoration(
                         hintText: "Endereço",
                       ),
-                      /*validator: (text) {
+                      validator: (text) {
                         if (text.isEmpty) return "Endereço inválido!";
                         else
-                          return "";
-                      },*/
+                          return null;
+                      },
                     ),
                     SizedBox(height: 16.0,),//espaço entre a senha e o botão esqueci minha senha
                     SizedBox( //coloca o botão numa altura um pocuo maior de 44
