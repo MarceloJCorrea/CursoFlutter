@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductData{//declaração da classe com as suas variáveis\atributos
 
-  String Category;
+  String category;
   String id;
   String title;
   String description;
@@ -18,5 +18,13 @@ class ProductData{//declaração da classe com as suas variáveis\atributos
     images = snapshot.data["images"];
     sizes = snapshot.data["sizes"];
 
+  }
+
+  Map<String, dynamic> toResumedMap(){//irá armazenar os dados somente de um resumo do produto
+    return{
+      'title': title,
+      'description': description,
+      'price': price,
+    };
   }
 }
