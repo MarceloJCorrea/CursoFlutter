@@ -14,6 +14,10 @@ class UserModel extends Model{
 
  bool isLoading = false;//verificar se está modificando ou não
 
+ //método static é um método da classe e não do objeto
+ static UserModel of(BuildContext context) =>
+     ScopedModel.of<UserModel>(context);//desta forma pode-se acessar o User model de qualquer lugar de uma forma muito simples
+
  @override
  void addListener(VoidCallback listener) {//quando rodar o app irá pegar o usuário atual através dessa função
    super.addListener(listener);

@@ -45,14 +45,18 @@ class CategoryScreen extends StatelessWidget {
                       ),
                       itemCount: snapshot.data.documents.length,//tamanho da grid
                       itemBuilder: (context, index){//dados a exibir do firestore
-                        return ProductTile("grid", ProductData.fromDocument(snapshot.data.documents[index]));//irá buscar os dados da classe ProductTile, caso mude de banco, só iria precisar alterar o código nessa classe e não em todos os pontos que chamar o firestore
+                        ProductData data = ProductData.fromDocument(snapshot.data.documents[index]);//irá buscar os dados da classe ProductTile, caso mude de banco de dados, só iria precisar alterar o código nessa classe e não em todos os pontos que chamar o firestore
+                        data.category = this.snapshot.documentID; //this.snapshot pois indica cada categoria do nosso document que irá retornaar do banco. Pega cada categoria do produto e salva dentro do próprio produto para poder utilizá-lo no product_screen
+                        return ProductTile("grid", data);//recebe o que o data obteve de resultado, esta é uma forma de guardar a categoria do produto no carrinho
                       },
                     ),
                     ListView.builder(//como será listado em lista os produtos
                       padding: EdgeInsets.all(4.0),//espaçamento
                       itemCount: snapshot.data.documents.length,//tamanho da lista
                       itemBuilder: (context, index){//dados a exibir do firestore
-                        return ProductTile("list", ProductData.fromDocument(snapshot.data.documents[index]));//irá buscar os dados da classe ProductTile, caso mude de banco, só iria precisar alterar o código nessa classe e não em todos os pontos que chamar o firestore
+                        ProductData data = ProductData.fromDocument(snapshot.data.documents[index]); //irá buscar os dados da classe ProductTile, caso mude de banco de dados, só iria precisar alterar o código nessa classe e não em todos os pontos que chamar o firestore
+                        data.category = this.snapshot.documentID;
+                        return ProductTile("list", data);//recebe o que o data obteve de resultado, esta é uma forma de guardar a categoria do produto no carrinho
                       },
                     )
                   ],

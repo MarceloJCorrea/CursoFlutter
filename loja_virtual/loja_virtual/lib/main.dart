@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModel<UserModel>(//dentro do <> coloca o tipo do ScopedModel
         model: UserModel(),//chama o model para ser usado em qualquer lugar do app
-        child: ScopedModelDescendant(//refaz o carrinho caso troque de usuario
+        child: ScopedModelDescendant<UserModel>(//refaz o carrinho caso troque de usuario, tem que especificar o tipo do modelo <UserModel> para que ele encontre o scoped model correto
           builder: (context, child, model){
             return ScopedModel<CartModel>(
               model: CartModel(model),//nosso carrinho precisa ter acesso ao usuário atual, usuário atual não precisa de acesso ao carrinho

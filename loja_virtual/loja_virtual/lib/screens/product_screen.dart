@@ -2,7 +2,12 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:lojavirtual/data/cart_product.dart';
 import 'package:lojavirtual/data/products_data.dart';
+import 'package:lojavirtual/models/cart_model.dart';
+import 'package:lojavirtual/models/user_model.dart';
+import 'package:lojavirtual/screens/cart_screen.dart';
+import 'package:lojavirtual/screens/login_screen.dart';
 
 class ProductScreen extends StatefulWidget {
 
@@ -118,12 +123,32 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
                 SizedBox(
                   height: 44.0,
-                  child: RaisedButton(//botão
+                  child: RaisedButton(//botão para adicionar no carrinho
                     onPressed:
                         size != null ?//verifica se foi selecionado tamanho se sim, libera o botão senão, retorna null
-                        (){} : null,
+                        (){ //UserModel.of(context) recebe um objeto do tipo UserModel, igual ao Navitator.of(context).
+                          if(UserModel.of(context).isLoggedIn()){ //verifica se o usuário está logado, se estiver adiciona no carrinho
+
+                            CartProduct cartProduct = CartProduct();
+                            cartProduct.size = size;//tamanho que será adicionado no carrinho
+                            cartProduct.quantity = 1;//quantidade que será adicionada ao carrinho, fixo 1.
+                            cartProduct.pid = product.id;//pega o id do produto dessa tela e passa para o CartProduct.pic
+                            cartProduct.category = product.category; //categoria é setada no categoryscreen
+
+                            CartModel.of(context).addCartItem(cartProduct);//adiciona no carrinho, usa o CartProduct, tem que declarar o construtor vazio na classe
+
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => CartScreen()), //ao adicionar o item vai abrir a tela do carrinho
+                            );
+                          }
+                          else {
+                            Navigator.of(context).push(//senão estiver abre a tela de login do usuário
+                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                            );
+                          }
+                        } : null,
                     child: Text(//texto do botão
-                      "Adicionar ao carrinho",
+                      UserModel.of(context).isLoggedIn() ? "Adicionar ao carrinho" : "Entre para Comprar",//verifica se o usuário está logado, se estiver mostra o texto do botão para adicionar ao carrinho, senão mostra para entrar para comprar
                       style: TextStyle(
                         fontSize: 18.0
                       ),

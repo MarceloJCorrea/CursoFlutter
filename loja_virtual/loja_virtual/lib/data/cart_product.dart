@@ -13,6 +13,8 @@ class CartProduct{
 
   ProductData productData;//dados do produto da classe product_data, dados do produto não serão armazendos permanentemente no produto mas ela precisa aparecer no carrinho
 
+  CartProduct(); //construtor vazio
+
   CartProduct.fromDocument(DocumentSnapshot document){//vai receber todos os produtos do carrinho e vai transformar num CardProduct
     cid = document.documentID;
     category = document.data['category'];
@@ -27,7 +29,7 @@ class CartProduct{
       'pid': pid,
       'quantity': quantity,
       'size': size,
-      'productData': productData.toResumedMap(), //armazena um resumo somente, pois para acompanhar os meus pedidos não aparecerão todos os dados, somente um resumo
+      //'productData': productData.toResumedMap(), //armazena um resumo somente, pois para acompanhar os meus pedidos não aparecerão todos os dados, somente um resumo
     };
   }
 }
