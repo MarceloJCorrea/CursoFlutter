@@ -12,6 +12,8 @@ class CartModel extends Model{
 
   CartModel(this.user);//carrinho vai ter acesso ao usuário atual, se mudar de usuário vai ter outros produtos
 
+  bool isLoading = false;//inicia a variavel de que está carregando com false
+
   //desta forma pode-se acessar o CartModel de qualquer lugar de uma forma muito simples
   static CartModel of(BuildContext context) =>
       ScopedModel.of<CartModel>(context);

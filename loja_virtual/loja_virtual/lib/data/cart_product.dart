@@ -15,6 +15,7 @@ class CartProduct{
 
   CartProduct(); //construtor vazio
 
+
   CartProduct.fromDocument(DocumentSnapshot document){//vai receber todos os produtos do carrinho e vai transformar num CardProduct
     cid = document.documentID;
     category = document.data['category'];
