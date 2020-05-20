@@ -10,7 +10,10 @@ class CartModel extends Model{
 
   UserModel user; //recebe o usuaário do user model
 
-  CartModel(this.user);//carrinho vai ter acesso ao usuário atual, se mudar de usuário vai ter outros produtos
+  CartModel(this.user){
+    if(user.isLoggedIn())//se estiver logado carrega os produtos do carrinho que estão no firebase
+      _loadCartItens();
+  }//carrinho vai ter acesso ao usuário atual, se mudar de usuário vai ter outros produtos
 
   bool isLoading = false;//inicia a variavel de que está carregando com false
 
@@ -39,4 +42,30 @@ class CartModel extends Model{
 
   }
 
+
+  void decProduct(CartProduct cartProduct){
+    cartProduct.quantity--;//deleta um item do carrinho
+
+    Firestore.instance.collection('users').document(user.firebaseUser.uid).collection('cart').document(cartProduct.cid).updateData(cartProduct.toMap()); //excluir o produto no firebase, produto que está no carrinho
+
+    notifyListeners();
+  }
+
+  void incProduct(CartProduct cartProduct){
+    cartProduct.quantity++;//adiciona mais um item no carrinho
+
+    Firestore.instance.collection('users').document(user.firebaseUser.uid).collection('cart').document(cartProduct.cid).updateData(cartProduct.toMap()); //excluir o produto no firebase, produto que está no carrinho
+
+    notifyListeners();
+  }
+
+  void _loadCartItens() async {
+    QuerySnapshot query = await Firestore.instance.collection('users').document(
+        user.firebaseUser.uid).collection('cart').getDocuments();
+
+    products = query.documents.map((doc) => CartProduct.fromDocument(doc))
+        .toList(); //transformando cada documento que retornou do firebase em um CartProduto, depois retorno uma lista com todos os CartProducts na lista de produtos
+
+    notifyListeners();
+  }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lojavirtual/data/cart_product.dart';
 import 'package:lojavirtual/data/products_data.dart';
+import 'package:lojavirtual/models/cart_model.dart';
 
 class CartTile extends StatelessWidget {
 
@@ -14,7 +15,72 @@ class CartTile extends StatelessWidget {
   Widget build(BuildContext context) {
 
     Widget _buildContent(){
-
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,//alinhamento principal é start
+        children: <Widget>[
+          Container(
+              padding: EdgeInsets.all(8.0),
+              width: 120.0,
+              child: Image.network(
+                cartProduct.productData.images[0],
+                fit: BoxFit.cover,
+              ),
+          ),
+          Expanded(//expanded para cobrir toda a área que sobrar depois da imagem
+            child: Container(//simplesmente para dar espaçamento
+              padding: EdgeInsets.all(8.0),
+              child: Column(//coluna pq tem um em cima do outro
+                crossAxisAlignment: CrossAxisAlignment.start,//alinhar tudo á esquerda
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,//ficar espaçado na vertical
+                children: <Widget>[
+                  Text(
+                      cartProduct.productData.title,//título do produto que está no productData
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17.0)
+                  ),
+                  Text(
+                    "Tamanho: ${cartProduct.size}",//tamanho do produto que está no cartProduct
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  ),
+                  Text(
+                    "R\$ ${cartProduct.productData.price.toStringAsFixed(2)}",//preço do produto que está no productData
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor
+                    )
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,//espaçamento igual entre todos os widgets na linha
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.remove, color: cartProduct.quantity > 1 ? Theme.of(context).primaryColor : Colors.grey[500],),
+                        onPressed: cartProduct.quantity > 1 ? () {
+                          CartModel.of(context).decProduct(cartProduct);//diminui a quantidade de itens no carrinho
+                        } : null //se quantidade for maior do que 1 deixa remover, senão obriga usar o botaõ remover.
+                      ),
+                      Text(
+                        cartProduct.quantity.toString(),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add, color: Theme.of(context).primaryColor,),
+                        onPressed: (){
+                          CartModel.of(context).incProduct(cartProduct);//adiciona mais itens do mesmo produto no carrinho
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Remover"),
+                        textColor: Colors.grey[500],
+                        onPressed: (){
+                          CartModel.of(context).removeCartItem(cartProduct);//remove produto do carrinho
+                        },
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
     }
 
     return Card(
