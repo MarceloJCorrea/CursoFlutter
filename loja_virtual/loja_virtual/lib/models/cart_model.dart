@@ -10,6 +10,9 @@ class CartModel extends Model{
 
   UserModel user; //recebe o usuaário do user model
 
+  String couponCode; //variável do código do cupom
+  int discountPercentage = 0;//porcentagem do cupom
+
   CartModel(this.user){
     if(user.isLoggedIn())//se estiver logado carrega os produtos do carrinho que estão no firebase
       _loadCartItens();
@@ -67,5 +70,10 @@ class CartModel extends Model{
         .toList(); //transformando cada documento que retornou do firebase em um CartProduto, depois retorno uma lista com todos os CartProducts na lista de produtos
 
     notifyListeners();
+  }
+
+  void setCoupon(String couponCode, int discountPercentage){//aplicar desconto no carrinho
+    this.couponCode = couponCode; //salvar o código do cupom
+    this.discountPercentage = discountPercentage; //salvar a porcentagem
   }
 }
