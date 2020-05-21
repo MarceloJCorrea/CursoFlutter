@@ -10,12 +10,20 @@ class CartPrice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    CartModel.of(context).updatePrices();//chama a função que atualiza os valores dos preços no carrinho
+
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: Container(
         padding: EdgeInsets.all(16.0),
         child: ScopedModelDescendant<CartModel>(
           builder: (context, child, model){
+
+            double price = model.getProductsPrice();//retorna da função do cartModel
+            double discount = model.getDiscount();//retorna da função do cartModel
+            double ship = model.getShipPrice();//retorna da função do cartModel
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,//tudo ocupe o máximo de espaço possível, botão, textos tudo
               children: <Widget>[
@@ -29,7 +37,7 @@ class CartPrice extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text("Subtotal"),
-                    Text("R\$ 0.00")
+                    Text("R\$ ${price.toStringAsFixed(2)}")
                   ],
                 ),
                 Divider(),
@@ -37,7 +45,7 @@ class CartPrice extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                   Text("Desconto"),
-                  Text("R\$ 0.00")
+                  Text("R\$ ${discount > 0 ? '-' : ''}${discount.toStringAsFixed(2)}")
                 ],
                 ),
                 Divider(),
@@ -45,7 +53,7 @@ class CartPrice extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                   Text("Entrega"),
-                  Text("R\$ 0.00")
+                  Text("R\$ ${ship.toStringAsFixed(2)}")
                 ],
                 ),
                 SizedBox(height: 12.0,),//espaçamento
@@ -53,7 +61,7 @@ class CartPrice extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                   Text("Total", style: TextStyle(fontWeight: FontWeight.w500),),
-                  Text("R\$ 0.00", style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0),)
+                  Text("R\$ ${(price + ship - discount).toStringAsFixed(2)}", style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0),)
                 ],
                 ),
                 SizedBox(height: 12.0,),//espaçamento
@@ -61,8 +69,9 @@ class CartPrice extends StatelessWidget {
                   child: Text("Finalizar Pedido"),
                   textColor: Colors.white,
                   color: Theme.of(context).primaryColor ,
-                  onPressed: (){},
-
+                  onPressed: (){
+                    model.finishOrder();//chama a função que fecha o pedido
+                  },
                 )
               ],
             );

@@ -36,7 +36,7 @@ class DiscountCard extends StatelessWidget {
                       backgroundColor: Theme.of(context).primaryColor,)
                     );
                   }else {//senão mostra que o cupom é inválido
-                    CartModel.of(context).setCoupon(null, 0);//se o cupom é inválido set nulo na função que seta o cupom no carrinho e percentual 0
+                    CartModel.of(context).setCoupon("", 0);//se o cupom é inválido set nulo na função que seta o cupom no carrinho e percentual 0
                     Scaffold.of(context).showSnackBar(
                         SnackBar(content: Text("Cupom inválido"),
                         backgroundColor: Colors.redAccent,)

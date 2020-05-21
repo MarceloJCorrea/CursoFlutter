@@ -45,6 +45,77 @@ class CartModel extends Model{
 
   }
 
+  double getProductsPrice(){//retornar e calcular o preço do produto no carrinho
+    double price = 0.00;//inicia o preço em zero
+    for (CartProduct c in products){//pega cada um dos produtos e colocar em c
+      if(c.productData != null)//se o c já tiver carregado o productDate vai incrementar o preço
+        price += c.quantity * c.productData.price;//pega a quantidade do produto e multiplica pelo preço e adiciona no price
+    }
+    return price;
+
+  }
+
+  double getDiscount(){//retorna o desconto
+    return getProductsPrice() * discountPercentage / 100; //pega a porcetagem de desconto e multiplica pelo preço total dos produtos
+  }
+
+  double getShipPrice(){//retorna o valor da entrega
+    return 9.99;//preço do frete fixo
+  }
+
+  Future<String> finishOrder() async {//função que fecha o pedido e atualiza o carrinho na tela, apaga os produtos do carrinho e apaga no firestore também.
+    if (products.length == 0)
+      return null; //verifica se a lista de produtos está diferente de vazia.
+
+    isLoading = true;
+
+    notifyListeners();
+
+    double productsPrice = getProductsPrice(); //retorna o preço dos produtos
+    double shipPrice = getShipPrice(); //retorna o frete
+    double discount = getDiscount(); //retorna o desconto
+
+    //obtem a referencia do pedido para salvar no usuário depois
+    DocumentReference refOrder = await Firestore.instance.collection('orders').add( //cria a coleção no banco de dados do Firestore "orders".
+        {
+          "clienteId": user.firebaseUser.uid, //pega o uid do cliente para adicionar no pedido do cliente
+          "products": products.map((cartProduct) => cartProduct.toMap())
+              .toList(),//transforma cada CartProduct em um mapa para acionar no banco de dados
+          "shipPrice": shipPrice,
+          "productsPrice": productsPrice,
+          "discount": discount,
+          "totalPrice": productsPrice + shipPrice - discount,
+          "status": 1,//status que informa que está preparando
+        }
+    );
+
+    Firestore.instance.collection("users").document(user.firebaseUser.uid).
+    collection("orders")
+        .document(refOrder.documentID). //acessa a coleção do usuário para adicionar a referencia do pedido dentro do cliente que fez o pedido
+    setData({
+      "orderId": refOrder.documentID, //salva a refeerendia do pedido no cliente
+    });
+
+    QuerySnapshot query = await Firestore.instance.collection("users").document(
+        user.firebaseUser.uid).collection("cart").getDocuments();
+
+    for (DocumentSnapshot doc in query.documents) { //pega cada um dos documentos da lista do carrinho, cada um dos produtos do carrinho, pega a refereência dele e vai deletar
+      doc.reference.delete();
+    }
+
+    products.clear();
+    couponCode = null;
+    discountPercentage = 0;
+
+    isLoading = false;
+    notifyListeners();
+
+    return refOrder.documentID; //retorna o numero do pedido para apresentar ao usuário o número do pedido que foi concluído depois
+  }
+
+  void updatePrices(){//atualiza os valores no carrinho caso haja alteração
+    notifyListeners();
+  }
 
   void decProduct(CartProduct cartProduct){
     cartProduct.quantity--;//deleta um item do carrinho

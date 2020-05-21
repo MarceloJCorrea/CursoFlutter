@@ -56,7 +56,6 @@ class CartScreen extends StatelessWidget {
                         MaterialPageRoute(builder: (context)=>LoginScreen())
                       );
                     },
-
                   )
                 ],
               )
@@ -75,7 +74,12 @@ class CartScreen extends StatelessWidget {
               ),
               DiscountCard(),
               ShipCard(),
-              CartPrice((){}),
+              CartPrice(()async {
+                String orderId = await model.finishOrder();//retorna o ID do pedido caso dê certo, se não der retorna null
+                if (orderId != null){//se retornou o ID vai mostrar o id do pedido
+                  print (orderId);
+                }
+              }),
             ],
           );
         },
