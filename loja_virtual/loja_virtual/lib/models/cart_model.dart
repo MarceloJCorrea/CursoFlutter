@@ -111,6 +111,7 @@ class CartModel extends Model{
     notifyListeners();
 
     return refOrder.documentID; //retorna o numero do pedido para apresentar ao usuário o número do pedido que foi concluído depois
+
   }
 
   void updatePrices(){//atualiza os valores no carrinho caso haja alteração

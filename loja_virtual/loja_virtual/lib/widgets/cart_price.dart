@@ -6,7 +6,7 @@ class CartPrice extends StatelessWidget {
 
   final VoidCallback buy;
 
-  CartPrice(this.buy); //construtor para chamar a função de finalizar o pedido pela CartScreen
+  CartPrice(this.buy);//construtor para chamar a função de finalizar o pedido pela CartScreen
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lojavirtual/models/cart_model.dart';
 import 'package:lojavirtual/screens/HomeScreen.dart';
 import 'package:scoped_model/scoped_model.dart';
-
 import 'models/user_model.dart';
 
 void main() => runApp(MyApp());

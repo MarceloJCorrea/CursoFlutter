@@ -30,7 +30,7 @@ class CartProduct{
       'pid': pid,
       'quantity': quantity,
       'size': size,
-      //'productData': productData.toResumedMap(), //armazena um resumo somente, pois para acompanhar os meus pedidos não aparecerão todos os dados, somente um resumo
+      'productData': productData.toResumedMap(), //armazena um resumo somente, pois para acompanhar os meus pedidos não aparecerão todos os dados, somente um resumo
     };
   }
 }

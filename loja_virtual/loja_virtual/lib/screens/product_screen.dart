@@ -134,6 +134,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             cartProduct.quantity = 1;//quantidade que será adicionada ao carrinho, fixo 1.
                             cartProduct.pid = product.id;//pega o id do produto dessa tela e passa para o CartProduct.pic
                             cartProduct.category = product.category; //categoria é setada no categoryscreen
+                            cartProduct.productData = product; //para guardar o resumo do pedido no carrinho e no pedido
 
                             CartModel.of(context).addCartItem(cartProduct);//adiciona no carrinho, usa o CartProduct, tem que declarar o construtor vazio na classe
 
