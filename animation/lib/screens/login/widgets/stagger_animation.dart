@@ -4,10 +4,10 @@ class StaggerAnimation extends StatelessWidget {
 
   final AnimationController controller;
 
-  StaggerAnimation({this.controller}) : //inicializar a animação usando essa notaçaõ
+  StaggerAnimation({this.controller}) : //inicializar a animação usando essa notação
       buttonSqueeze = Tween(
-        begin: 320.0,
-        end: 60.0,
+        begin: 320.0,//começa com esse tamanho
+        end: 60.0,//termina com este
       ).animate(
         CurvedAnimation(//pedacinho da animação inteira, não termina no 1, levará 0.3 para o botão diminuir
           parent: controller,
@@ -35,27 +35,29 @@ class StaggerAnimation extends StatelessWidget {
         onTap: (){
           controller.forward();//tocar no botão faz a animação iniciar
         },
-        child:
-        buttonZoomOut.value <= 60 ? // se ele continua 60 de altura continua do jeito que tava
+        child: Hero(//Hero é o que dá o efeito da troca de cor da tela, tem que ser o mesmo Hero para o app entender.
+          tag: 'fade',
+          child: buttonZoomOut.value == 60 ? // se ele continua 60 de altura continua do jeito que tava
           Container(
-            height: 60,//altura do botão
-            width: buttonSqueeze.value,//largura do botão
-            alignment: Alignment.center,//alinhamento do botão
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(247, 64, 106, 1.0),//cor rosa do botão em hexadecimal e 1.0 é a opacidade
-              borderRadius: BorderRadius.all(Radius.circular(30.0))//borda em volta do botão
-            ),
-          child: _buildInside(context)
-          )
-            : Container(
-                height: buttonZoomOut.value,//altura do botão vai depender do bottão zoom out
-                width: buttonZoomOut.value,//largura do botão vai depender do bottão zoom out
-                decoration: BoxDecoration(
+              height: 60,//altura do botão
+              width: buttonSqueeze.value,//largura do botão
+              alignment: Alignment.center,//alinhamento do botão
+              decoration: BoxDecoration(
                   color: Color.fromRGBO(247, 64, 106, 1.0),//cor rosa do botão em hexadecimal e 1.0 é a opacidade
-                  shape: buttonZoomOut.value < 500 ?
-                      BoxShape.circle : BoxShape.rectangle // começa crescento como circulo e termina como retângulo
+                  borderRadius: BorderRadius.all(Radius.circular(30.0))//borda em volta do botão
               ),
-             )
+              child: _buildInside(context)
+          )
+              : Container(
+            height: buttonZoomOut.value,//altura do botão vai depender do bottão zoom out
+            width: buttonZoomOut.value,//largura do botão vai depender do bottão zoom out
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(247, 64, 106, 1.0),//cor rosa do botão em hexadecimal e 1.0 é a opacidade
+                shape: buttonZoomOut.value < 500 ?
+                BoxShape.circle : BoxShape.rectangle // começa crescento como circulo e termina como retângulo
+            ),
+          ),
+        )
       ),
     );
   }
