@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "132412239047",
+    "firebase_url": "https://memes-f2176.firebaseio.com",
+    "project_id": "memes-f2176",
+    "storage_bucket": "memes-f2176.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132412239047:android:9f63438c2c521f447ea2e2",
+        "android_client_info": {
+          "package_name": "br.com.correa.memesengracados"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132412239047-vtfovq1tdgjpujn7klt53cf40evnnpvi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNf88uugreKDx_yXNVvTj6icCA8Iwi49M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "132412239047-vtfovq1tdgjpujn7klt53cf40evnnpvi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

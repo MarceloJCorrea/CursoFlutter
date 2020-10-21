@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "64463985837",
+    "firebase_url": "https://lojavirtual-3b804.firebaseio.com",
+    "project_id": "lojavirtual-3b804",
+    "storage_bucket": "lojavirtual-3b804.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64463985837:android:ffbaebe5edbfee63cbfa24",
+        "android_client_info": {
+          "package_name": "br.com.correa.gerenteloja"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64463985837-prb1gs55fmn2onop0dshqilsdopsvmie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClpnQYesCVMYdFGERPqpKW3O2j9Qd38nE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64463985837-prb1gs55fmn2onop0dshqilsdopsvmie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64463985837:android:1118a9bb763a6a60cbfa24",
+        "android_client_info": {
+          "package_name": "br.com.correa.lojavirtual"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64463985837-prb1gs55fmn2onop0dshqilsdopsvmie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClpnQYesCVMYdFGERPqpKW3O2j9Qd38nE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64463985837-prb1gs55fmn2onop0dshqilsdopsvmie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
