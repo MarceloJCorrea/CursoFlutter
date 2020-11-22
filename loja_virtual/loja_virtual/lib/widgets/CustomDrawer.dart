@@ -16,7 +16,7 @@ class CustomDrawer extends StatelessWidget {
     Widget _buldDrawerBack() => Container(//cria um degradê de cores, inicia no centro um azul claro e termina no centro como branco
       decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors: [
+               colors: [
                 Color.fromARGB(255, 203, 236, 241),//azul clarinho
                 Colors.white//branco
               ],

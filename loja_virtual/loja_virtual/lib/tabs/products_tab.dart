@@ -6,7 +6,7 @@ class ProductsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
-      future: Firestore.instance.collection("products").getDocuments(),//carrega a lista de produtos do firebase
+      future: FirebaseFirestore.instance.collection("products").get(),//carrega a lista de produtos do firebase
       builder: (context, snapshot){//função obrigatoria para buscar os dados firebase
         if(!snapshot.hasData)
           return Center(
@@ -14,7 +14,7 @@ class ProductsTab extends StatelessWidget {
           );
         else {
           var dividedTiles = //pega a listTiles e pede para dividir as tiles
-          ListTile.divideTiles(tiles: snapshot.data.documents.map((doc){//pega cada documento e torca cada categorytile e passa todas as tiles para o divideTiles e transforma tudo em uma lista
+          ListTile.divideTiles(tiles: snapshot.data.docs.map((doc){//pega cada documento e torca cada categorytile e passa todas as tiles para o divideTiles e transforma tudo em uma lista
                return CategoryTile(doc);//
               }).toList(),
               color: Colors.grey[500]).toList();//cor do divisor entre as Categorias, transforma em list depois

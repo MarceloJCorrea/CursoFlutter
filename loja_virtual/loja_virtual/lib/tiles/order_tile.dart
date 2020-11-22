@@ -16,7 +16,7 @@ class OrderTile extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(8.0),
         child: StreamBuilder<DocumentSnapshot>(//fica monitorando o banco de dados e atualiza a tela instantaneamete caso haja alteração no banco
-          stream: Firestore.instance.collection('orders').document(orderId).snapshots(),
+          stream: FirebaseFirestore.instance.collection('orders').doc(orderId).snapshots(),
           builder: (context, snapshot){
             if(!snapshot.hasData)
               return Center(child: CircularProgressIndicator(),);
@@ -27,7 +27,7 @@ class OrderTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Código do pedido: ${snapshot.data.documentID}",
+                    "Código do pedido: ${snapshot.data.id}",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4.0,),
@@ -67,10 +67,10 @@ class OrderTile extends StatelessWidget {
 
   String _buildProductsText(DocumentSnapshot snapshot){
     String text = "Descrição: \n";
-    for(LinkedHashMap p in snapshot.data['products']){//lista do Firestore é uma linkedhashmap, para cada um dos nossos produtos do pedido vai juntar um texto no outro
+    for(LinkedHashMap p in snapshot.data()['products']){//lista do Firestore é uma linkedhashmap, para cada um dos nossos produtos do pedido vai juntar um texto no outro
       text += '${p['quantity']} x ${p["productData"]["title"]} (R\$ ${p["productData"] ['price'].toStringAsFixed(2)})\n';//para cada um dos produtos vai aparecer a quantitade x o produto e o valor convertido em duas casas
     }
-    text += 'Total: R\$ ${snapshot.data['totalPrice'].toStringAsFixed(2)}';//mostra o total do pedido
+    text += 'Total: R\$ ${snapshot.data()['totalPrice'].toStringAsFixed(2)}';//mostra o total do pedido
     return text;
   }
 

@@ -11,12 +11,12 @@ class ProductData{//declaração da classe com as suas variáveis\atributos
   List sizes;
 
   ProductData.fromDocument(DocumentSnapshot snapshot){//declara o construtor e passa o que recebe do firestore para as variáves da classe
-    id = snapshot.documentID;
-    title = snapshot.data["title"];
-    description = snapshot.data["description"];
-    price = snapshot.data["price"] + 0.0;// + 0.0 resolve o problema do firestore colocar o preço como int e a classe como double, isso irá forçar sempre ser double o resultado do firestore
-    images = snapshot.data["images"];
-    sizes = snapshot.data["sizes"];
+    id = snapshot.id;
+    title = snapshot.data()["title"];
+    description = snapshot.data()["description"];
+    price = snapshot.data()["price"] + 0.0;// + 0.0 resolve o problema do firestore colocar o preço como int e a classe como double, isso irá forçar sempre ser double o resultado do firestore
+    images = snapshot.data()["images"];
+    sizes = snapshot.data()["sizes"];
 
   }
 

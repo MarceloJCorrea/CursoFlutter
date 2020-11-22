@@ -17,11 +17,11 @@ class CartProduct{
 
 
   CartProduct.fromDocument(DocumentSnapshot document){//vai receber todos os produtos do carrinho e vai transformar num CardProduct
-    cid = document.documentID;
-    category = document.data['category'];
-    pid = document.data['pid'];
-    quantity = document.data['quantity'];
-    size = document.data['size'];
+    cid = document.id;
+    category = document.data()['category'];
+    pid = document.data()['pid'];
+    quantity = document.data()['quantity'];
+    size = document.data()['size'];
   }
 
   Map<String, dynamic> toMap(){//armazena os dados do carrinho no banco de dados

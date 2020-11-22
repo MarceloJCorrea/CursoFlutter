@@ -28,11 +28,11 @@ class DiscountCard extends StatelessWidget {
               ),
               initialValue: CartModel.of(context).couponCode ?? "",//carrega o cupom de desconto do carrinho e caso não tenha aparece "", nada.
               onFieldSubmitted: (text){
-                Firestore.instance.collection('coupons').document(text).get().then((docSnap){//busca o cupom lá no Firebase e pega o 'text' que o usuário digitou e salva no docSnap para validar
-                  CartModel.of(context).setCoupon(text, docSnap.data['percent']);//se tiver o cupom no firebase, salva o cupom e o percentual no carrinho
+                FirebaseFirestore.instance.collection('coupons').doc(text).get().then((docSnap){//busca o cupom lá no Firebase e pega o 'text' que o usuário digitou e salva no docSnap para validar
+                  CartModel.of(context).setCoupon(text, docSnap.data()['percent']);//se tiver o cupom no firebase, salva o cupom e o percentual no carrinho
                   if(docSnap.data != null){//verifica se o cupom é válido
                     Scaffold.of(context).showSnackBar(//se for mostra para o usuário que o cupom foi aplicado
-                      SnackBar(content: Text("Desconto de ${docSnap.data['percent']}% aplicado"),
+                      SnackBar(content: Text("Desconto de ${docSnap.data()['percent']}% aplicado"),
                       backgroundColor: Theme.of(context).primaryColor,)
                     );
                   }else {//senão mostra que o cupom é inválido

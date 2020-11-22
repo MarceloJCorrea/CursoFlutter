@@ -3,8 +3,14 @@ import 'package:lojavirtual/models/cart_model.dart';
 import 'package:lojavirtual/screens/HomeScreen.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'models/user_model.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
 
 //coloca o ScopedModel como widget principal para que ele possa ser chamado em qualquer lugar do app.
 class MyApp extends StatelessWidget {

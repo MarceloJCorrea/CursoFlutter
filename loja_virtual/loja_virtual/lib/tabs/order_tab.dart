@@ -10,16 +10,16 @@ class OrderTab extends StatelessWidget {
 
     if(UserModel.of(context).isLoggedIn()){//se usuário está logado mostra os pedidos dele
 
-      String uid = UserModel.of(context).firebaseUser.uid; //pega o usuário para ver os pedidos dele
+      String uid = UserModel.of(context).firebaseUser.currentUser.uid; //pega o usuário para ver os pedidos dele
 
       return FutureBuilder<QuerySnapshot>(
-        future: Firestore.instance.collection('users').document(uid).collection('orders').getDocuments(),//busca no firestore os pedidos do usuário
+        future: FirebaseFirestore.instance.collection('users').doc(uid).collection('orders').get(),//busca no firestore os pedidos do usuário
         builder: (context, snapshot){
           if(!snapshot.hasData){
             return Center(child: CircularProgressIndicator(),);
           } else{
             return ListView(
-              children: snapshot.data.documents.map((doc) => OrderTile(doc.documentID)).toList(),//pega os documentos transforma num mapa e transforma num ordertile para mostar todos os pedidos do usuário em forma de lista
+              children: snapshot.data.docs.map((doc) => OrderTile(doc.id)).toList(),//pega os documentos transforma num mapa e transforma num ordertile para mostar todos os pedidos do usuário em forma de lista
             );
           }
         },

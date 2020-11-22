@@ -87,8 +87,8 @@ class CartTile extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), //margin dá um espaçamento fora do widget, o padding dá dentro
       child: cartProduct.productData == null ?  //se no cart_product não tiver produto no cache, vai procurar no banco de dados
         FutureBuilder<DocumentSnapshot>(//senão tem os dados buscca no firabase, se tem os dados mostra no _buildContent()
-          future: Firestore.instance.collection('products').document(cartProduct.category)
-          .collection('itens').document(cartProduct.pid).get(),//busca os dados do carrino no firebase
+          future: FirebaseFirestore.instance.collection('products').doc(cartProduct.category)
+          .collection('itens').doc(cartProduct.pid).get(),//busca os dados do carrino no firebase
           builder: (context, snapshot){
             if(snapshot.hasData){//se estou carregando
               cartProduct.productData = ProductData.fromDocument(snapshot.data);//converte o que retornou do firebase para o cartProduct

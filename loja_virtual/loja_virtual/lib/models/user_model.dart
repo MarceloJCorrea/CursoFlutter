@@ -8,7 +8,7 @@ class UserModel extends Model{
 
  FirebaseAuth _auth = FirebaseAuth.instance;//cria a variavel para pegar as credenciais do usuário
 
- FirebaseUser firebaseUser;//usuario que vai estar logado no momento, se tiver usuario vai ter o id do usuário
+ FirebaseAuth firebaseUser;//usuario que vai estar logado no momento, se tiver usuario vai ter o id do usuário
 
  Map<String, dynamic> userData = Map();//dados mais importantes do usuário, e-mail, nome e endreço do usuário.
 
@@ -34,7 +34,7 @@ class UserModel extends Model{
         email: userData['email'], //recebe o e-mail do firebase
         password: pass//recebe a senha do parâmetro da função
     ).then((user) async {//se for um sucesso vai chamar essa função passando o usuário
-      firebaseUser = user;
+      firebaseUser = user as FirebaseAuth;
 
       await _saveUserData(userData); //esperando para salvar os dados no firebase
 
@@ -60,7 +60,7 @@ class UserModel extends Model{
         email: email, //recebe o e-mail do firebase
         password: pass//recebe a senha do parâmetro da função
     ).then((user) async {//se for um sucesso vai chamar essa função passando o usuário
-      firebaseUser = user;
+      firebaseUser = user as FirebaseAuth;
 
       await _loadCurrentUser(); //quando fizer o login será carregado o usuário atual.
 
@@ -97,16 +97,16 @@ class UserModel extends Model{
   //usar o _ na função pois essa função chamada somente nessa classe, as outras serão chamadas de outros lugar do código
   Future<Null> _saveUserData (Map<String, dynamic> userData) async {//função que salvará os dados do usuário
     this.userData = userData;
-    await Firestore.instance.collection('users').document(firebaseUser.uid).setData(userData);//salva os dados no firebase
+    await FirebaseFirestore.instance.collection('users').doc(firebaseUser.currentUser.uid).set(userData);//salva os dados no firebase
   }
 
   Future<Null> _loadCurrentUser() async{//função que carrega os dados do usuário do firebase
     if(firebaseUser == null)//se não tiver usuário logado, tenta recuperar o usuário
-      firebaseUser = await _auth.currentUser();
+      firebaseUser = _auth.currentUser as FirebaseAuth;
     if(firebaseUser != null){//se tem usuário logado, mostra o usuário
       if(userData['name'] == null){
-        DocumentSnapshot docUser = await Firestore.instance.collection('users').document(firebaseUser.uid).get();//carega do firestore o usuário
-        userData = docUser.data;//guarda o que retornou no userData
+        DocumentSnapshot docUser = await FirebaseFirestore.instance.collection('users').doc(firebaseUser.currentUser.uid).get();//carega do firestore o usuário
+        userData = docUser.data();//guarda o que retornou no userData
       }
     }
     notifyListeners();

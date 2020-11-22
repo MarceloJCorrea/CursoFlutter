@@ -27,17 +27,17 @@ class CartModel extends Model{
   void addCartItem(CartProduct cartProduct){//adciona produto no carrinho
     products.add(cartProduct);
 
-    Firestore.instance.collection('users').document(user.firebaseUser.uid)//pega o carrinho do usuário no Firestore
+    FirebaseFirestore.instance.collection('users').doc(user.firebaseUser.currentUser.uid)//pega o carrinho do usuário no Firestore
         .collection('cart').add(cartProduct.toMap()).then((doc){//entra na coleção cart e adiciona num mapa, que já tem função criada no cart_product
-       cartProduct.cid = doc.documentID;//armazena o cid do produto no carrinho par
+       cartProduct.cid = doc.id;//armazena o cid do produto no carrinho par
       // a ser possível remover depois
     });
     notifyListeners();//notifica os listeners, porque acabou de adicionar o novo item no carrinho e quer que liste esse novo produto no carrinho
   }
 
   void removeCartItem(CartProduct cartProduct){//remove produto do carrinho
-    Firestore.instance.collection('users').document(user.firebaseUser.uid).
-       collection('cart').document(cartProduct.cid).delete();//delete o documento de um produto dentro do carrinho
+    FirebaseFirestore.instance.collection('users').doc(user.firebaseUser.currentUser.uid).
+       collection('cart').doc(cartProduct.cid).delete();//delete o documento de um produto dentro do carrinho
 
     products.remove(cartProduct);//remove o produto da lista de produtos do carrinho
 
@@ -76,9 +76,9 @@ class CartModel extends Model{
     double discount = getDiscount(); //retorna o desconto
 
     //obtem a referencia do pedido para salvar no usuário depois
-    DocumentReference refOrder = await Firestore.instance.collection('orders').add( //cria a coleção no banco de dados do Firestore "orders".
+    DocumentReference refOrder = await FirebaseFirestore.instance.collection('orders').add( //cria a coleção no banco de dados do Firestore "orders".
         {
-          "clienteId": user.firebaseUser.uid, //pega o uid do cliente para adicionar no pedido do cliente
+          "clienteId": user.firebaseUser.currentUser.uid, //pega o uid do cliente para adicionar no pedido do cliente
           "products": products.map((cartProduct) => cartProduct.toMap())
               .toList(),//transforma cada CartProduct em um mapa para acionar no banco de dados
           "shipPrice": shipPrice,
@@ -89,17 +89,17 @@ class CartModel extends Model{
         }
     );
 
-    Firestore.instance.collection("users").document(user.firebaseUser.uid).
+    FirebaseFirestore.instance.collection("users").doc(user.firebaseUser.currentUser.uid).
     collection("orders")
-        .document(refOrder.documentID). //acessa a coleção do usuário para adicionar a referencia do pedido dentro do cliente que fez o pedido
-    setData({
-      "orderId": refOrder.documentID, //salva a refeerendia do pedido no cliente
+        .doc(refOrder.id). //acessa a coleção do usuário para adicionar a referencia do pedido dentro do cliente que fez o pedido
+    set({
+      "orderId": refOrder.id, //salva a refeerendia do pedido no cliente
     });
 
-    QuerySnapshot query = await Firestore.instance.collection("users").document(
-        user.firebaseUser.uid).collection("cart").getDocuments();
+    QuerySnapshot query = await FirebaseFirestore.instance.collection("users").doc(
+        user.firebaseUser.currentUser.uid).collection("cart").get();
 
-    for (DocumentSnapshot doc in query.documents) { //pega cada um dos documentos da lista do carrinho, cada um dos produtos do carrinho, pega a refereência dele e vai deletar
+    for (DocumentSnapshot doc in query.docs) { //pega cada um dos documentos da lista do carrinho, cada um dos produtos do carrinho, pega a refereência dele e vai deletar
       doc.reference.delete();
     }
 
@@ -110,7 +110,7 @@ class CartModel extends Model{
     isLoading = false;
     notifyListeners();
 
-    return refOrder.documentID; //retorna o numero do pedido para apresentar ao usuário o número do pedido que foi concluído depois
+    return refOrder.id; //retorna o numero do pedido para apresentar ao usuário o número do pedido que foi concluído depois
 
   }
 
@@ -121,7 +121,7 @@ class CartModel extends Model{
   void decProduct(CartProduct cartProduct){
     cartProduct.quantity--;//deleta um item do carrinho
 
-    Firestore.instance.collection('users').document(user.firebaseUser.uid).collection('cart').document(cartProduct.cid).updateData(cartProduct.toMap()); //excluir o produto no firebase, produto que está no carrinho
+    FirebaseFirestore.instance.collection('users').doc(user.firebaseUser.currentUser.uid).collection('cart').doc(cartProduct.cid).update(cartProduct.toMap()); //excluir o produto no firebase, produto que está no carrinho
 
     notifyListeners();
   }
@@ -129,16 +129,16 @@ class CartModel extends Model{
   void incProduct(CartProduct cartProduct){
     cartProduct.quantity++;//adiciona mais um item no carrinho
 
-    Firestore.instance.collection('users').document(user.firebaseUser.uid).collection('cart').document(cartProduct.cid).updateData(cartProduct.toMap()); //excluir o produto no firebase, produto que está no carrinho
+    FirebaseFirestore.instance.collection('users').doc(user.firebaseUser.currentUser.uid).collection('cart').doc(cartProduct.cid).update(cartProduct.toMap()); //excluir o produto no firebase, produto que está no carrinho
 
     notifyListeners();
   }
 
   void _loadCartItens() async {
-    QuerySnapshot query = await Firestore.instance.collection('users').document(
-        user.firebaseUser.uid).collection('cart').getDocuments();
+    QuerySnapshot query = await FirebaseFirestore.instance.collection('users').doc(
+        user.firebaseUser.currentUser.uid).collection('cart').get();
 
-    products = query.documents.map((doc) => CartProduct.fromDocument(doc))
+    products = query.docs.map((doc) => CartProduct.fromDocument(doc))
         .toList(); //transformando cada documento que retornou do firebase em um CartProduto, depois retorno uma lista com todos os CartProducts na lista de produtos
 
     notifyListeners();

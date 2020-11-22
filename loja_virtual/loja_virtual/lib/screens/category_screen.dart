@@ -15,7 +15,7 @@ class CategoryScreen extends StatelessWidget {
       length: 2, // terá duas guias que o usuário escolhe se quser lista ou lado a lado
       child: Scaffold(
         appBar: AppBar(
-          title: Text(snapshot.data["title"]),//texto do app bar que será mostrado em cima será o da categoria escolhida.
+          title: Text(snapshot.data()["title"]),//texto do app bar que será mostrado em cima será o da categoria escolhida.
           centerTitle: true,
           bottom: TabBar(
             indicatorColor: Colors.white,//cor que a guia selecionada ficará
@@ -26,7 +26,7 @@ class CategoryScreen extends StatelessWidget {
           ),
         ),
         body: FutureBuilder<QuerySnapshot>(
-          future: Firestore.instance.collection("products").document(snapshot.documentID).collection('itens').getDocuments(),//irá buscar as informação da categoria que estamos, exemplo camisetas e o que está dentro de itens dele dentro do firestore
+          future: FirebaseFirestore.instance.collection("products").doc(snapshot.id).collection('itens').get(),//irá buscar as informação da categoria que estamos, exemplo camisetas e o que está dentro de itens dele dentro do firestore
           builder: (context, snapshot){
             if(!snapshot.hasData)//se não retornar dados ficará o circulo rodando
                return Center(child: CircularProgressIndicator(),);
@@ -43,19 +43,19 @@ class CategoryScreen extends StatelessWidget {
                         crossAxisSpacing: 4.0,// espaçamento do eixo principal
                         mainAxisSpacing: 4.0, //espaçamento do eixo cruzado
                       ),
-                      itemCount: snapshot.data.documents.length,//tamanho da grid
+                      itemCount: snapshot.data.docs.length,//tamanho da grid
                       itemBuilder: (context, index){//dados a exibir do firestore
-                        ProductData data = ProductData.fromDocument(snapshot.data.documents[index]);//irá buscar os dados da classe ProductTile, caso mude de banco de dados, só iria precisar alterar o código nessa classe e não em todos os pontos que chamar o firestore
-                        data.category = this.snapshot.documentID; //this.snapshot pois indica cada categoria do nosso document que irá retornaar do banco. Pega cada categoria do produto e salva dentro do próprio produto para poder utilizá-lo no product_screen
+                        ProductData data = ProductData.fromDocument(snapshot.data.docs[index]);//irá buscar os dados da classe ProductTile, caso mude de banco de dados, só iria precisar alterar o código nessa classe e não em todos os pontos que chamar o firestore
+                        data.category = this.snapshot.id; //this.snapshot pois indica cada categoria do nosso document que irá retornaar do banco. Pega cada categoria do produto e salva dentro do próprio produto para poder utilizá-lo no product_screen
                         return ProductTile("grid", data);//recebe o que o data obteve de resultado, esta é uma forma de guardar a categoria do produto no carrinho
                       },
                     ),
                     ListView.builder(//como será listado em lista os produtos
                       padding: EdgeInsets.all(4.0),//espaçamento
-                      itemCount: snapshot.data.documents.length,//tamanho da lista
+                      itemCount: snapshot.data.docs.length,//tamanho da lista
                       itemBuilder: (context, index){//dados a exibir do firestore
-                        ProductData data = ProductData.fromDocument(snapshot.data.documents[index]); //irá buscar os dados da classe ProductTile, caso mude de banco de dados, só iria precisar alterar o código nessa classe e não em todos os pontos que chamar o firestore
-                        data.category = this.snapshot.documentID;
+                        ProductData data = ProductData.fromDocument(snapshot.data.docs[index]); //irá buscar os dados da classe ProductTile, caso mude de banco de dados, só iria precisar alterar o código nessa classe e não em todos os pontos que chamar o firestore
+                        data.category = this.snapshot.id;
                         return ProductTile("list", data);//recebe o que o data obteve de resultado, esta é uma forma de guardar a categoria do produto no carrinho
                       },
                     )

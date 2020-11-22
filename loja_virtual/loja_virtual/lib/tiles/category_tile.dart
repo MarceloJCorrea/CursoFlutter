@@ -14,9 +14,9 @@ class CategoryTile extends StatelessWidget {
       leading: CircleAvatar(
         radius: 25.0,//raio do ícone
         backgroundColor: Colors.transparent,//cor de fundo transparente do icone
-        backgroundImage: NetworkImage(snapshot.data["icon"]),//icone que será carregado do firestore
+        backgroundImage: NetworkImage(snapshot.data()["icon"]),//icone que será carregado do firestore
       ),
-      title: Text(snapshot.data["title"]),//titulo que será carregado do firestore
+      title: Text(snapshot.data()["title"]),//titulo que será carregado do firestore
       trailing: Icon(Icons.keyboard_arrow_right),//seta do final para indicar para entrar para ver os produtos
       onTap: (){
         Navigator.of(context).push(//ao clicar no categoria "camiseta", "shorts" vai para a tela CategoryScreen

@@ -1,65 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:memesengracados/drawer/custom_drawer.dart';
+import 'package:memesengracados/tabs/configuration_tab.dart';
+import 'package:memesengracados/tabs/favorite_tab.dart';
+import 'package:memesengracados/tabs/home_tab.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
+class HomeScreen extends StatelessWidget {
 
-class _HomeState extends State<HomeScreen> {
   final _pageController = PageController();
 
-  bool favorite  = false;
-
+  /*não está sendo usada*/
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: CustomDrawer(_pageController),
-      appBar: AppBar(
-        title: Text('Memes engraçados', style: TextStyle(color: Colors.black),),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: <Widget>[
-                  Image.asset('image1.jpg', fit: BoxFit.cover,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: (){},
-                        icon: Icon(Icons.share),
-                      ),
-                      IconButton(
-                        onPressed: (){},
-                        icon: Icon(Icons.file_download),
-                      ),
-                      IconButton(
-                        onPressed: setFavorite,
-                        icon: favorite == false ? Icon(Icons.favorite_border) : Icon(Icons.favorite),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+    return PageView(
+      controller: _pageController,
+      physics: NeverScrollableScrollPhysics(),
+      children: <Widget> [
+        Scaffold(
+          body: HomeTab(),
+          drawer: CustomDrawer(_pageController),
+        ),
+        Scaffold(
+          drawer: CustomDrawer(_pageController),
+          appBar: AppBar(centerTitle: true, title: Text('Favoritos'),),
+          body: FavoriteTab(),
+        ),
+        Scaffold(
+          drawer: CustomDrawer(_pageController),
+          appBar: AppBar(centerTitle: true, title: Text('Configuração'),),
+          body: ConfigurationTab(),
+        ),
+      ],
     );
-  }
-
-  void setFavorite (){
-    setState((){
-      if(favorite == false)
-        favorite = true;
-      else
-        favorite = false;
-    });
-
   }
 }
