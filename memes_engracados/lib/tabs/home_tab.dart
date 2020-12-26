@@ -4,6 +4,7 @@ import 'package:memesengracados/tabs/configuration_tab.dart';
 import 'package:memesengracados/tabs/favorite_tab.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:memesengracados/drawer/custom_drawer.dart';
+import 'package:memesengracados/models/images_model.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _HomeTabState extends State<HomeTab> {
 
   bool favorite  = false;
   final _pageController = PageController();
+  ImagesModel imagesModel;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +31,7 @@ class _HomeTabState extends State<HomeTab> {
           ),
           body: ListView(
             children: [
-              FutureBuilder<QuerySnapshot>(
-                  future: FirebaseFirestore.instance.collection('images').orderBy('id').get(),
-                  builder: (context, snapshot){
-                    return getImages();
-                  }
-              )
+              getImages()
             ],
           ),
         ),
@@ -52,15 +49,31 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  FutureBuilder getImages(){
+  FutureBuilder getImages() {
     return FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance.collection('images').orderBy('id').get(),
+        future: FirebaseFirestore.instance.collection('images').orderBy('imageId').get(),
         builder: (context, snapshot){
           if(!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator(),);
+            return Container(
+              height: 500.0,
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+              ),
+            );
           }
-          return Column(
-            children: snapshot.data.docs.map(
+          else if (snapshot.hasError){
+            return Container(
+              alignment: Alignment.center,
+              height: 500,
+              padding: EdgeInsets.all(10),
+              child: Text('Não encontrado nenhuma meme, tente novamente!',
+                style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),),
+            );
+          }
+          else {
+            return Column(
+              children: snapshot.data.docs.map(
                       (doc) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -75,16 +88,18 @@ class _HomeTabState extends State<HomeTab> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               IconButton(
-                                onPressed: (){},
+                                onPressed: () {},
                                 icon: Icon(Icons.share),
                               ),
                               IconButton(
-                                onPressed: (){},
+                                onPressed: () {},
                                 icon: Icon(Icons.file_download),
                               ),
                               IconButton(
                                 onPressed: setFavorite,
-                                icon: favorite == false ? Icon(Icons.favorite_border) : Icon(Icons.favorite),
+                                icon: favorite == false ? Icon(
+                                    Icons.favorite_border) : Icon(
+                                    Icons.favorite),
                               )
                             ],
                           )
@@ -92,17 +107,20 @@ class _HomeTabState extends State<HomeTab> {
                       ),
                     );
                   }).toList(),
-          );
+            );
+          }
         }
     );
   }
 
   void setFavorite (){
     setState((){
-      if(favorite == false)
+      if(favorite == false){
         favorite = true;
-      else
+        print (favorite);}
+      else{
         favorite = false;
+        print (favorite);}
     });
   }
 }

@@ -18,23 +18,28 @@ class DrawerTile extends StatelessWidget {
           Navigator.of(context).pop();
           controller.jumpToPage(page);
         },
-        child: Container(
-          height: 60.0,
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 16.0,
-                color: controller.page == page? Theme.of(context).primaryColor : Colors.grey,
-              ),
-              Text(
-                text,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: controller.page == page? Theme.of(context).primaryColor : Colors.grey,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            height: 50.0,
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 20.0,
+                  color: controller.page == page? Theme.of(context).primaryColor : Colors.black,
                 ),
-              )
-            ],
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w500,
+                    color: controller.page == page? Theme.of(context).primaryColor : Colors.black,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

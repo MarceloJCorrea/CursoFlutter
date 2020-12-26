@@ -11,6 +11,7 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Drawer(
+    elevation: 0,
     child: Stack(
       children: [
         ListView(
@@ -18,7 +19,7 @@ class CustomDrawer extends StatelessWidget {
           children: <Widget>[
             Container(
               height: 120,
-              width: 30,
+              width: 20,
               child: DrawerHeader(
                 padding: EdgeInsets.all(20),
                 child: Text('Memes engraçados',
@@ -33,38 +34,6 @@ class CustomDrawer extends StatelessWidget {
             DrawerTile(Icons.home, 'Início', pageController, 0),
             DrawerTile(Icons.star, 'Favoritos', pageController, 1),
             DrawerTile(Icons.build, 'Configuração', pageController, 2),
-
-            /*ListTile(
-                leading: Icon(Icons.home),
-                trailing: Icon(Icons.play_arrow),
-                title: Text('Início', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),),
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => HomeScreen())
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.star),
-                trailing: Icon(Icons.play_arrow),
-                title: Text('Favoritos', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),),
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => FavoriteTab())
-                  );
-                },
-              ),
-              Divider(color: Colors.grey,),
-              ListTile(
-                 leading: Icon(Icons.build),
-                 trailing: Icon(Icons.play_arrow),
-                 title: Text('Configuração', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),),
-                 onTap: (){
-                   Navigator.of(context).push(MaterialPageRoute(
-                       builder: (_) => ConfigurationTab())
-                   );
-                 },
-               ),*/
           ],
         ),
       ],
